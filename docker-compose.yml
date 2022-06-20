@@ -1,0 +1,23 @@
+version: '3.5'
+services:
+  app:
+    build: .
+    container_name:
+      deploy-maven-app
+    ports:
+      - 8181:8080
+    command:  sh -c "./mvnw spring-boot:run"
+    restart: on-failure 
+  nginx:
+    image:
+      nginx:mainline
+    ports:
+      - 80:81
+    volumes:
+      - ./deploy-maven.conf:/etc/nginx/conf.d/deploy-maven.conf
+      #- ./default.conf:/etc/nginx/conf.d/default.conf
+    container_name:
+      deploy-maven-nginx
+    depends_on:
+      - app
+    restart: on-failure 
